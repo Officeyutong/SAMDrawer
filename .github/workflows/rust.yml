@@ -14,10 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install sqlite
-      run: sudo apt install libsqlite3-dev
-    - name: Install libssl
-      run: sudo apt install libssl-dev
     - name: Build
       run: cargo build --release
 #     - name: Compress the output
@@ -29,7 +25,7 @@ jobs:
       uses: actions/upload-artifact@v2.3.1
       with:
         name: "ubuntu-x86_64"
-        path: "target/release/app"
+        path: "target/release/sam-drawer-rs"
     
   "build-windows-x64":
     runs-on: windows-latest
@@ -47,7 +43,7 @@ jobs:
       uses: actions/upload-artifact@v2.3.1
       with:
         name: "windows-x86_64"
-        path: "target/release/app.exe"
+        path: "target/release/sam-drawer-rs.exe"
   "build-macos-x64":
     runs-on: macos-latest
     steps:
@@ -63,4 +59,4 @@ jobs:
       uses: actions/upload-artifact@v2.3.1
       with:
         name: "macos-x86_64"
-        path: "target/release/app"
+        path: "target/release/sam-drawer-rs"
