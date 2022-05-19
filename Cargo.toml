@@ -1,0 +1,25 @@
+[package]
+name = "sam-drawer-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix = "0.13.0"
+actix-files = "0.6.0"
+actix-web = "4.0.1"
+anyhow = "1.0.57"
+dot-writer = "0.1.2"
+flexi_logger = "0.22.3"
+log = "0.4.17"
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = "1.0.81"
+serde_yaml = "0.8.24"
+tempfile = "3.3.0"
+tokio = { version = "1.18.2", features = ["full"] }
+
+[profile.release]
+opt-level = 3
+debug = 0
+overflow-checks = false

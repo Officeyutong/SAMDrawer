@@ -1,0 +1,132 @@
+<html>
+
+<head>
+    <title>
+        SAM Drawer
+    </title>
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.5.17/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/semantic-ui/2.3.3/semantic.min.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script> -->
+    <link href="https://cdn.staticfile.org/semantic-ui/2.3.3/semantic.min.css" rel="stylesheet">
+</head>
+
+<body style="background-color: rgb(236, 233, 233)">
+    <div class="ui main container" style="margin-top:70px;margin-bottom:70px">
+
+        <script>
+            $(this).ready(()=> {
+               new Vue({
+                    delimiters: ['{[', ']}'],
+                    el: "#main",
+                    data: {
+                        error: false,
+                        error_text: "",
+                        str: "",
+                        showing: false,
+                        loading: false,
+                        svg_content: ""
+                    },
+                    methods: {
+                        submit: function () {
+                            $("svg-content").css({ "height": "100px" });
+                            this.error = false
+                            this.showing = true;
+                            this.loading = true;
+                            let local = this;
+                            $.ajax({
+                                url: "draw",
+                                method: "POST",
+                                async: true,
+                                data: {
+                                    string: local.str
+                                },
+                                success: function (result) {
+                                    console.log(result);
+                                    local.loading = false;
+                                    if (result.code != 0) {
+                                        local.error = true;
+                                        local.error_text = result.message;
+                                        return;
+                                    }
+                                    local.svg_content = result.data;
+
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
+        <div style="top: 10%">
+            <div class="ui left aligned container" style="width: 100%" id="main">
+                <div class="ui header">
+                    <h1>SAM Drawer</h1>
+                </div>
+                <div class="ui error message" v-if="error">
+                    <div class="ui header">
+                        错误
+                    </div>
+                    <p>{[error_text]}</p>
+                </div>
+                <div class="ui segment stacked">
+                    <div class="ui inverted active dimmer" v-if="loading">
+                        <div class="ui text loader">
+                            正在加载..
+                        </div>
+                    </div>
+                    <div class="ui form" id="main-form">
+                        <div class="field">
+                            <label>请输入字符串:</label>
+                            <input type="text" id="string" v-model="str" v-on:keyup.enter="submit">
+                        </div>
+                        <p>如果要绘制广义SAM,请使用|分隔字符串</p>
+                        <div class="ui submit button" id="submit-button" v-on:click="submit">提交</div>
+                    </div>
+                </div>
+                <div v-if="showing" class="ui segment stacked">
+                    <div class="ui inverted active dimmer" v-if="loading">
+                        <div class="ui text loader">
+                            正在加载..
+                        </div>
+                    </div>
+                    <div id="svg-content" class="ui center aligned container" style="min-height: 100px"
+                        v-html="svg_content">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="ui center aligned  container">
+        <div style="color: darkgrey">
+            Made by MikuNotFoundException<br>
+            <a href="https://github.com/Officeyutong/SAMDrawer">Github</a>
+        </div>
+    </div>
+    <div class="ui modal" id="base-message-box">
+        <div class="header">消息</div>
+        <div class="content">
+            <p></p>
+        </div>
+        <div class="actions">
+            <div class="ui approve button">
+                确定
+            </div>
+        </div>
+    </div>
+    <div class="ui modal" id="base-error-box">
+        <div class="header">消息</div>
+        <div class="content">
+            <p></p>
+        </div>
+        <div class="actions">
+            <div class="ui approve button">
+                确定
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
