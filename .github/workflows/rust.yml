@@ -1,0 +1,62 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  "build-ubuntu-x64":
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --release
+#     - name: Compress the output
+#       uses: crazy-max/ghaction-upx@v1.4.0
+#       with:
+#         args: "--ultra-brute"
+#         file: "target/release/app"
+    - name: Upload
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: "ubuntu-x86_64"
+        path: "target/release/sam-drawer-rs"
+    
+  "build-windows-x64":
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --release
+    - name: Compress the output
+      uses: crazy-max/ghaction-upx@v1.4.0
+      with:
+        args: "--ultra-brute"
+        files: |
+          "target/release/app.exe"
+    - name: Upload
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: "windows-x86_64"
+        path: "target/release/sam-drawer-rs.exe"
+  "build-macos-x64":
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --release
+#     - name: Compress the output
+#       uses: crazy-max/ghaction-upx@v1.4.0
+#       with:
+#         args: "--ultra-brute"
+#         file: "target/release/app"
+    - name: Upload
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: "macos-x86_64"
+        path: "target/release/sam-drawer-rs"
